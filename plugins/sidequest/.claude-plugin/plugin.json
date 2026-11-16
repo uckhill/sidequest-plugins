@@ -1,0 +1,10 @@
+{
+  "name": "sidequest",
+  "version": "1.0.0",
+  "description": "Hire verified people for real-world tasks from Claude Code: phone calls, store and sign checks, photo proof of a place, pickups and returns, waiting in line, native-speaker translation, and human review of AI output.",
+  "author": { "name": "Crescent Harbor LLC", "email": "hello@sidequestpays.com" },
+  "homepage": "https://sidequestpays.com",
+  "repository": "https://github.com/uckhill/sidequest-plugins",
+  "license": "MIT",
+  "keywords": ["mcp", "humans", "real-world tasks", "phone calls", "verification", "errands"]
+}
