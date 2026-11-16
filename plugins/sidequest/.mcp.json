@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "sidequest": {
+      "type": "http",
+      "url": "https://sidequestpays.com/mcp"
+    }
+  }
+}
