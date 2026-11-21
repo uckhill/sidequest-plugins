@@ -19,7 +19,7 @@ Fill the brief without guessing:
 - **who**: anyone to talk to or avoid
 - **if_different**: what to do if things aren't as described
 
-Ask the user for anything missing in one short message. Then show the title, a one-line summary, and the total cost (reward plus 20% fee, $2 minimum) and post only after they say yes. If the user already told you to use SideQuest and gave a budget, that is their confirmation: set `max_total_usd` to the budget and post.
+Ask the user for anything missing in one short message. Then show the title, a one-line summary, and a spending limit for them to approve (pass it as max_total_usd) and post only after they say yes. If the user already told you to use SideQuest and gave a budget, that is their confirmation: set `max_total_usd` to the budget and post.
 
 ## Quest types
 
