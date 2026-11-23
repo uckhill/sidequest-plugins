@@ -7,7 +7,7 @@ Let Claude Code hire verified people for real-world tasks: phone calls, store an
 ## Install
 
 ```
-/plugin marketplace add uckhill/sidequest-plugins
+/plugin marketplace add sidequestpays/sidequest-plugins
 /plugin install sidequest@sidequest
 ```
 

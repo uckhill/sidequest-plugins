@@ -1,12 +1,12 @@
 {
   "name": "sidequest",
-  "description": "SideQuest plugins for Claude Code: hire verified people for real-world tasks.",
+  "description": "SideQuest: Hire Real People. Plugins for Claude Code.",
   "owner": { "name": "Crescent Harbor LLC", "email": "hello@sidequestpays.com" },
   "plugins": [
     {
       "name": "sidequest",
       "source": "./plugins/sidequest",
-      "description": "Hire verified people for phone calls, store checks, photo proof, pickups, translation, and human review. Paid upfront, released on approved proof."
+      "description": "Hire real people for real-world tasks: phone calls, store checks, inspections, errands and video capture. Paid upfront, released on verified proof."
     }
   ]
 }

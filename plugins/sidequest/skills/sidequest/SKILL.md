@@ -1,6 +1,6 @@
 ---
 name: sidequest
-description: Hire a verified real person through SideQuest when a task needs someone in the real world, such as calling a business, checking a store is open or a sign is up, taking photos at a place, inspecting an item, a pickup or return, waiting in line, native-speaker translation, or human review of AI output.
+description: "SideQuest: Hire Real People. Use when a task needs a real person: calling a business, checking a store or sign, photos at a place, inspecting an item or vehicle, a pickup or return, waiting in line, first-person video for AI training, translation, or human review of AI output."
 ---
 
 # SideQuest
@@ -19,7 +19,9 @@ Fill the brief without guessing:
 - **who**: anyone to talk to or avoid
 - **if_different**: what to do if things aren't as described
 
-Ask the user for anything missing in one short message. Then show the title, a one-line summary, and a spending limit for them to approve (pass it as max_total_usd) and post only after they say yes. If the user already told you to use SideQuest and gave a budget, that is their confirmation: set `max_total_usd` to the budget and post.
+Ask the user for anything missing in one short message. Then show the title, a one-line summary, and a spending limit for them to approve (pass it as max_total_usd) and post only after they say yes. If the user already told you to use SideQuest and gave a budget, that is their confirmation: set `max_total_usd` to the budget and post. A human approves the spend: you need your human's OK on cost, or must stay within the budget they set.
+
+Set `confirm_accurate` to true only after the user confirms the description is accurate and complete. For common jobs, pass `proof_template` (`store_check`, `item_inspection`, `pickup_dropoff`, `phone_call`) to pre-fill the checklist and required proof.
 
 ## Quest types
 
@@ -38,6 +40,6 @@ Check funds with `get_balance`. Add funds with `add_balance`, which returns a li
 
 ## What you can't post
 
-Account sign-ups, social posts, reviews, CAPTCHAs, impersonation, following or photographing specific people, gift cards or cash handling, restricted goods, or anything illegal.
+Account sign-ups, social posts, reviews, CAPTCHAs, impersonation, following or tracking a person, gift cards or cash handling, restricted goods, or anything illegal.
 
 Docs: https://sidequestpays.com/docs
