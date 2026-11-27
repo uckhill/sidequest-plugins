@@ -1,0 +1,41 @@
+{
+  "name": "sidequestpays-mcp",
+  "version": "1.0.4",
+  "description": "SideQuest: Hire Real People. MCP server over stdio. Hire real people for real-world tasks: phone calls, store checks, inspections, errands and video capture. Paid upfront, released on verified proof.",
+  "license": "MIT",
+  "author": "Crescent Harbor LLC <hello@sidequestpays.com>",
+  "homepage": "https://sidequestpays.com/connect/local-mcp",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sidequestpays/sidequest-plugins.git",
+    "directory": "packages/mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/sidequestpays/sidequest-plugins/issues",
+    "email": "support@sidequestpays.com"
+  },
+  "keywords": [
+    "mcp",
+    "model context protocol",
+    "mcp server",
+    "ai agents",
+    "human in the loop",
+    "hire humans",
+    "real-world tasks",
+    "claude",
+    "cursor"
+  ],
+  "type": "module",
+  "bin": {
+    "sidequestpays-mcp": "index.js"
+  },
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "mcpName": "com.sidequestpays/sidequest"
+}

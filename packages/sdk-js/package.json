@@ -1,0 +1,74 @@
+{
+  "name": "sidequestpays",
+  "version": "0.2.3",
+  "description": "SideQuest: Hire Real People. Hire real people for real-world tasks: phone calls, store checks, inspections, errands and video capture. Paid upfront, released on verified proof. TypeScript client and agent tools.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Crescent Harbor LLC <hello@sidequestpays.com>",
+  "homepage": "https://sidequestpays.com/docs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sidequestpays/sidequest-plugins.git",
+    "directory": "packages/sdk-js"
+  },
+  "bugs": {
+    "url": "https://github.com/sidequestpays/sidequest-plugins/issues",
+    "email": "support@sidequestpays.com"
+  },
+  "keywords": [
+    "ai agents",
+    "agent tools",
+    "human in the loop",
+    "mcp",
+    "vercel ai sdk",
+    "langchain",
+    "openai",
+    "tasks"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./ai": {
+      "types": "./dist/ai.d.ts",
+      "import": "./dist/ai.js"
+    },
+    "./langchain": {
+      "types": "./dist/langchain.d.ts",
+      "import": "./dist/langchain.js"
+    }
+  },
+  "engines": {
+    "node": ">=20.10"
+  },
+  "scripts": {
+    "build": "tsc -p .",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "ai": ">=4",
+    "@langchain/core": ">=0.3"
+  },
+  "peerDependenciesMeta": {
+    "ai": {
+      "optional": true
+    },
+    "@langchain/core": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "ai": "^7.0.0",
+    "@langchain/core": "^0.3.0",
+    "@types/node": "^22.0.0"
+  }
+}

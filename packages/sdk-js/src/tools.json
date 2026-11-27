@@ -1,0 +1,394 @@
+[
+  {
+    "name": "list_templates",
+    "description": "List the quest types a person can do for you. In person (needs lat/lng): verify_location, photo_proof, pickup_dropoff, inspect_item, be_present (stay somewhere for a scheduled window with timed photo check-ins). Remote (anyone, anywhere, optionally limited to a country): phone_call, translation, check_ai_output, video_capture (first-person video of a task for AI and robotics training data, recorded in the app, 1 hour to finish). Also lists proof_templates (store_check, item_inspection, vehicle_inspection, pickup_dropoff, phone_call, video_capture): ready-made checklists and required proof for common jobs that you can pass to create_quest as proof_template. Call this first to pick the right template.",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "read_only": true
+  },
+  {
+    "name": "create_quest",
+    "description": "Post a paid real-world quest for a verified human quester near a location. A human approves the spend: you need your human's OK on the cost, or must stay within a budget the human set (pass it as max_total_usd). If the person already told you to use SideQuest and gave you a budget (for example: 'use SideQuest if you get stuck, budget $10'), post on your own without asking again: set max_total_usd to their budget and pick a reward_usd that fits (the budget covers everything; if it's too low the error tells you the highest reward that fits). If they gave no budget, show them the title, a summary of the brief, and the total and wait for their yes. With a prepaid balance the quest is paid instantly and offered right away to the best-matched quester (closest, most reliable), then the next best if they pass. Proof is checked automatically by AI and, when it passes, the quester is paid with no human step (unless the account turned auto-approve off). Otherwise it returns a checkout_url a person must pay first (use funding: 'balance' to fail instead). Use for tasks only a person on site can do. If this connection requires owner approval, the quest returns status pending_approval and opens only after the owner approves it. Set confirm_accurate to true only after the person confirms the description is accurate and complete; questers can flag a quest as not as described, and a confirmed flag bans the account from posting.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "confirm_accurate": {
+          "type": "boolean",
+          "const": true,
+          "description": "Required. The person you are posting for confirms this description is accurate and complete. Quests without it are rejected."
+        },
+        "template": {
+          "type": "string",
+          "enum": [
+            "errand",
+            "online",
+            "verify_location",
+            "photo_proof",
+            "pickup_dropoff",
+            "inspect_item",
+            "be_present",
+            "phone_call",
+            "translation",
+            "check_ai_output",
+            "video_capture"
+          ],
+          "description": "Quest type from list_templates. Required unless proof_template is set."
+        },
+        "proof_template": {
+          "type": "string",
+          "enum": [
+            "store_check",
+            "item_inspection",
+            "pickup_dropoff",
+            "phone_call",
+            "vehicle_inspection",
+            "video_capture"
+          ],
+          "description": "Optional proof template from list_templates: store_check (open, in stock, as posted), item_inspection (listing or item inspection), vehicle_inspection (VIN, odometer, all four sides), pickup_dropoff, phone_call, or video_capture (video for AI training). Pre-fills the checklist, brief.how, and required proof (photo count, call recording). Anything you send in details.checklist, details.min_photos, or brief.how overrides it. template defaults to the one it is for."
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 140,
+          "description": "Short, clear instruction, e.g. 'Confirm Joe's Hardware at 12 Main St is open and photograph posted hours'."
+        },
+        "brief": {
+          "type": "object",
+          "description": "The quest brief. Fill in every field that applies so the quester has no ambiguity. what, how, and (for in-person quests) where are required. If the person you're helping hasn't told you something, ask them instead of guessing.",
+          "properties": {
+            "what": {
+              "type": "string",
+              "description": "The exact task and the deliverable. Example: 'Two current photos of the outside of the condo building.'"
+            },
+            "where": {
+              "type": "string",
+              "description": "The exact spot and how to access it, beyond the address: which entrance, side of the building, floor, public or private area, whether entry is arranged."
+            },
+            "when": {
+              "type": "string",
+              "description": "Deadline or time window, and best time of day if it matters (daylight, business hours)."
+            },
+            "which": {
+              "type": "string",
+              "description": "Details that identify the right target: building number, sign color, listing ID, item description."
+            },
+            "how": {
+              "type": "string",
+              "description": "What the proof must show: number of photos, angles, what must be visible, what to write or confirm."
+            },
+            "why": {
+              "type": "string",
+              "description": "The purpose, so the quester can make good judgment calls."
+            },
+            "who": {
+              "type": "string",
+              "description": "Anyone to talk to or ask for, and anyone not to involve. Whether people may appear in photos."
+            },
+            "if_different": {
+              "type": "string",
+              "description": "What to do if things aren't as expected: closed, not found, blocked view, item sold."
+            }
+          }
+        },
+        "details": {
+          "type": "object",
+          "description": "Optional extras shown to the quester: ordered steps, a yes/no checklist (the quester must answer every item and explain any no), and the street address.",
+          "properties": {
+            "instructions": {
+              "type": "string",
+              "description": "What to do and what good proof looks like."
+            },
+            "steps": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Ordered steps."
+            },
+            "checklist": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Yes/no items the quester confirms."
+            },
+            "address": {
+              "type": "string",
+              "description": "Street address, if any."
+            },
+            "min_photos": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 8,
+              "description": "Minimum photos the quester must submit."
+            },
+            "video": {
+              "type": "object",
+              "description": "For video_capture quests.",
+              "properties": {
+                "min_minutes": {
+                  "type": "number",
+                  "minimum": 1,
+                  "maximum": 120,
+                  "description": "Total minutes of video needed. Default 10."
+                },
+                "view": {
+                  "type": "string",
+                  "enum": [
+                    "first_person",
+                    "third_person"
+                  ],
+                  "description": "first_person (default): phone at eye level, hands in view. third_person: filmed from the side."
+                }
+              }
+            },
+            "call": {
+              "type": "object",
+              "description": "For phone_call quests. number is required.",
+              "properties": {
+                "number": {
+                  "type": "string",
+                  "description": "The number to call, with country code."
+                },
+                "numbers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "maxItems": 25,
+                  "description": "To have one quester call several numbers (up to 25), list them all here. number can then be omitted."
+                },
+                "if_no_answer": {
+                  "type": "string",
+                  "enum": [
+                    "voicemail",
+                    "retry_then_voicemail"
+                  ],
+                  "description": "voicemail (default): leave the message as a voicemail. retry_then_voicemail: call up to 3 times, then leave a voicemail. Either counts as done."
+                },
+                "callback_number": {
+                  "type": "string",
+                  "description": "Number to leave in voicemails for callbacks."
+                },
+                "record": {
+                  "type": "boolean",
+                  "description": "Record the call, voicemails included (the quester announces it if someone answers)."
+                }
+              }
+            }
+          }
+        },
+        "lat": {
+          "type": "number",
+          "description": "Latitude where the quest happens. Required for in-person templates, ignored for remote ones."
+        },
+        "lng": {
+          "type": "number",
+          "description": "Longitude where the quest happens. Required for in-person templates, ignored for remote ones."
+        },
+        "country": {
+          "type": "string",
+          "description": "Optional 2-letter ISO code. For remote quests, only questers in this country can claim it (for example NG for a quest needing local knowledge of Nigeria)."
+        },
+        "language": {
+          "type": "string",
+          "description": "Language needed, like Spanish or Yoruba. Required for translation quests."
+        },
+        "zip": {
+          "type": "string",
+          "description": "Optional ZIP or postal code of the quest location."
+        },
+        "reward_usd": {
+          "type": "number",
+          "minimum": 5,
+          "maximum": 1000,
+          "description": "The task price. SideQuest pays the quester from the task price; for remote quests the quester's pay depends on where they are."
+        },
+        "expires_in_minutes": {
+          "type": "number",
+          "minimum": 5,
+          "maximum": 86400,
+          "description": "How long the quest stays open for a quester to accept, counted from when it is paid. Default 5 minutes. Offers go to questers who are online right now; if nobody accepts in time the quest is cancelled and the full amount is credited to your SideQuest balance, so you can post again with a higher reward. Ignored when starts_at/ends_at are set (the quest expires at ends_at)."
+        },
+        "expires_in_hours": {
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 1440,
+          "description": "Same as expires_in_minutes, in hours."
+        },
+        "expires_at": {
+          "type": "string",
+          "description": "Alternative to expires_in_minutes: an exact ISO 8601 time with timezone, at least 5 minutes away."
+        },
+        "starts_at": {
+          "type": "string",
+          "description": "Optional scheduled start, ISO 8601 with timezone, like 2026-11-05T18:00:00-05:00. Required for be_present. The quest stays claimable until it ends and is credited to your SideQuest balance automatically if nobody claims it in time."
+        },
+        "ends_at": {
+          "type": "string",
+          "description": "Scheduled end, ISO 8601 with timezone. Up to 12 hours after starts_at."
+        },
+        "checkin_every_minutes": {
+          "type": "number",
+          "minimum": 5,
+          "maximum": 60,
+          "description": "In-person quests only. The quester's app reminds them to take a photo this often during the window. Each check-in is time-stamped by SideQuest's server with GPS distance from the site, and you can see them live with get_quest. Required for be_present."
+        },
+        "max_total_usd": {
+          "type": "number",
+          "minimum": 7,
+          "description": "The budget your human set for this quest, including the fee. Required unless they approved this exact cost. The quest is rejected with over_budget (and the highest reward that fits) if reward plus fee would exceed it."
+        },
+        "funding": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "balance",
+            "checkout"
+          ],
+          "description": "auto (default): use balance if it covers the total, else return a checkout_url. balance: only use balance, error if short. checkout: always return a checkout_url."
+        },
+        "preferred_quester_id": {
+          "type": "string",
+          "description": "Optional. Offer this quest first to a quester who did a good job for you before (the quester_id from get_quest on one of your approved or paid quests). If they're offline or pass, it goes to the next best quester as usual."
+        }
+      },
+      "required": [
+        "title",
+        "reward_usd",
+        "confirm_accurate"
+      ],
+      "additionalProperties": false
+    },
+    "read_only": false
+  },
+  {
+    "name": "get_balance",
+    "description": "Check your prepaid balance, this key's spend caps, and how much it has spent in the last 24 hours. Call before posting quests to know whether they will be paid instantly.",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    },
+    "read_only": true
+  },
+  {
+    "name": "get_quest",
+    "description": "Get one of your quests by id, including status, a private listing_url page the person can open to see it, live timed check-ins while a scheduled quest is in progress (photo URLs, server time, GPS distance), and, once submitted, the quester's proof (photo URLs, GPS, timestamp, notes) and quester_verdict: the quester's own verdict on whether the proof matches the quest (matches, doesnt_match, or unsure) with their reason. While disputed, dispute.deadline_at is when the reward is released to the quester if SideQuest has not decided. Photo URLs need the same credentials used for this connection.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "quest_id": {
+          "type": "string",
+          "description": "The quest id returned by create_quest, like q_abc123."
+        }
+      },
+      "required": [
+        "quest_id"
+      ],
+      "additionalProperties": false
+    },
+    "read_only": true
+  },
+  {
+    "name": "list_quests",
+    "description": "List your quests, newest first. Optionally filter by status: pending_approval, draft, open, claimed, submitted, approved, disputed, paid, cancelled, refunded.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending_approval",
+            "draft",
+            "open",
+            "claimed",
+            "submitted",
+            "approved",
+            "disputed",
+            "paid",
+            "cancelled",
+            "refunded"
+          ],
+          "description": "Only return quests with this status. Omit for all."
+        },
+        "limit": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 200,
+          "description": "Maximum quests to return. Default 50."
+        }
+      },
+      "additionalProperties": false
+    },
+    "read_only": true
+  },
+  {
+    "name": "approve_quest",
+    "description": "Approve a submitted quest after checking its proof. This releases the secured reward to the quester. Also works on a disputed quest to withdraw the dispute and pay. Optionally rate the quester 1 to 5. Submitted quests not approved or disputed within 72 hours are approved automatically.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "quest_id": {
+          "type": "string",
+          "description": "The quest id returned by create_quest, like q_abc123."
+        },
+        "rating": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Optional rating of the quester, 1 (poor) to 5 (excellent)."
+        }
+      },
+      "required": [
+        "quest_id"
+      ],
+      "additionalProperties": false
+    },
+    "read_only": false
+  },
+  {
+    "name": "dispute_quest",
+    "description": "Dispute a submitted quest whose proof does not meet the instructions, within 72 hours of submission. Funds stay held, the quester can respond once (see proof.quester_response), and a SideQuest reviewer either pays the quester in full or credits you in full (no partial payment) within 48 hours (see proof.resolution). If there is no decision by dispute.deadline_at: proof that automatic review passed is paid to the quester, anything else is credited to you. Give a specific reason of at least 10 characters.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "quest_id": {
+          "type": "string",
+          "description": "The quest id returned by create_quest, like q_abc123."
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "What the proof is missing or got wrong, specific enough for a reviewer to judge."
+        }
+      },
+      "required": [
+        "quest_id",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "read_only": false
+  },
+  {
+    "name": "cancel_quest",
+    "description": "Cancel a quest before a quester claims it. Paid quests are credited in full to your SideQuest balance. Claimed quests cannot be cancelled.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "quest_id": {
+          "type": "string",
+          "description": "The quest id returned by create_quest, like q_abc123."
+        }
+      },
+      "required": [
+        "quest_id"
+      ],
+      "additionalProperties": false
+    },
+    "read_only": false
+  }
+]
